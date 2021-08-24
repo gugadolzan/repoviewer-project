@@ -1,35 +1,112 @@
 :root {
-  --black: #1c2128;
-  --lightgrey: #cdd9e5;
-  --white: #f5f5f5;
-  --darkgray: #2d333b;
-  --purple: #6e5494;
-  --blue: #4078c0;
-  --green: #6cc644;
-  --red: #bd2c00;
-  --orange: #c9510c;
+  --black: #22272E;
+  --white: #CDD9E5;
+  --ice: #EBF1F6;
+  --grey: #2D333B;
+  --light-grey: #282E36;
+  --dark-grey: #1C2128;
+  --blue: #539BF5;
+  --red: #E34C26;
+  --green: #4A8B50;
 }
 
-header {
-  background-color: ;
+* {
+  padding: 0;
+  margin: 0;
+  vertical-align: baseline;
+  list-style: none;
+  border: 0;
+}
+
+#header {
+  background-color: var(--grey);
+  height: 80px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  margin: 10px;
+}
+
+.main-logo {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 body {
-  /* background-color: #2C394B; */
-}
-
-#head-title {
-  color: #FF4C29
+  background-color: var(--black);
 }
 
 .container {
   display: flex;
-  /* flex-direction: row-reverse; */
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  justify-content: space-around;
 }
 
-#user_input {
-  border-color: transparent;
-  flex: 1;
-  max-width: 10rem;
+.in-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-search {
+  position: relative;
+  width: 300px;
+}
+
+.custom-search-input {
+  width: 100%;
+  border: 1px solid var(--light-grey);
+  border-radius: 100px;
+  padding: 10px 100px 10px 20px;
+  line-height: 1;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.custom-search-botton,
+select {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  bottom: 3px;
+  border: 0;
+  background: var(--green);
+  color: var(--white);
+  outline: none;
+  margin: 0;
+  padding: 0 10px;
+  border-radius: 100px;
+  z-index: 2;
+}
+
+#head-title {
+  color: var(--ice);
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 74px;
+  line-height: 28px;
+  text-align: center;
+  margin-top: 200px;
+  margin-bottom: 50px;
+}
+
+footer {
+  background-color: var(--grey);
+  height: 80px;
+  justify-content: space-around;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  top: 950px;
+}
+
+#white-rocket {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
