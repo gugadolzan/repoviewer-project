@@ -66,18 +66,18 @@ function createRepoElement(user, project) {
 }
 
 async function getRepos(cohort, project) {
-  const responseRaw = await fetch(`https://api.github.com/repos/tryber/${cohort}-project-${project}/pulls`);
+  const responseRaw = await fetch(`${baseURL}repos/tryber/${cohort}-project-${project}/pulls`);
   const responseJSON = await responseRaw.json();
 
   if (responseJSON) return responseJSON;
 }
 
-async function appendRepos(cohort, project) {
+async function appendRepos() {
   // const reposList = await getRepos(cohort, project);
   const reposList = await getRepos('sd-014-a', 'pixels-art');
 
   reposList.forEach((repo) => {
-    // createRepoElement()
+    createRepoElement(repo.user.login, repo.title )
     console.log(repo);
   });
 }
@@ -87,9 +87,10 @@ async function appendRepos(cohort, project) {
 // element initialization on page load
 window.onload = () => {
   // load DOM selectors
-  selector.add('add_button', 'user_input', 'output');
-  // add event listenersszs
-  selector.add_button.addEventListener('click', addUser);
+  selector.add('user_button', 'user_input', 'repos_button', 'repos_input', 'output');
+  // add event listeners
+  selector.user_button.addEventListener('click', addUser);
+  selector.repos_button.addEventListener('click', appendRepos);
 
   console.log(selector);
 }

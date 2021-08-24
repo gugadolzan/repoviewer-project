@@ -1,3 +1,10 @@
+/**
+ * GitHub Corners, page css
+ * Author: Tim Holman
+ */
+
+ @import "corner.css";
+
 :root {
   --black: #22272E;
   --white: #CDD9E5;
@@ -83,19 +90,35 @@ select {
   z-index: 2;
 }
 
+.github-corner {
+  width: 80px;
+  height: 80px;
+  fill: var(--green);
+  color: var(--grey);
+  position: absolute;
+  border: 0;
+  top: 0;
+  right: 0;
+}
+
 #head-title {
   color: var(--ice);
   font-family: 'Roboto', sans-serif;
   font-style: normal;
   font-weight: 500;
-  font-size: 74px;
+  font-size: 45px;
   line-height: 28px;
   text-align: center;
-  margin-top: 200px;
-  margin-bottom: 50px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#output {
+  color: var(--ice);
 }
 
 footer {
+  color: var(--ice);
   background-color: var(--grey);
   height: 80px;
   justify-content: space-around;
