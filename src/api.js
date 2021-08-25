@@ -5,10 +5,13 @@ const api = {
   // API base URL
   baseURL: '', 
 
-  // queryAPI(query): queries the GitHub API and returns the response as a JSON-formatted object
+  // queryAPI(query): queries the API and returns the response as a JSON-formatted object
   query: async (query) => {
+    if (!query.includes(api.baseURL)) {
+      query = api.baseURL.concat(query);
+    }
     try {
-      const responseRaw = await fetch(`${api.baseURL}${query}`);
+      const responseRaw = await fetch(query);
       const responseJSON = await responseRaw.json();
       if (responseJSON.message === 'Not Found') {
         throw new Error('No result found!');
