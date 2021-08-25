@@ -40,45 +40,64 @@ async function addUser() {
   selector.output.appendChild(createCustomElement.a(JSON.html_url, `${JSON.login} (${JSON.name})`));
 }
 
-// Biza
+// SUPERBIZA
 
-function createRepoElement(user, project) {
-  const repoElement = document.createElement('div');
-  const repoUser = document.createElement('span');
-  const repoProject = document.createElement('span');
+const splitOutput = (comment, param) =>
+  comment
+    .find((item) => {
+      return item.includes(param);
+    })
+    .split('|')[1]
+    .trim();
 
-  repoUser.innerText = user;
-  repoProject.innerText = project;
+function getProjectStatus(comment) {
+  const splited = comment.split('\n');
 
-  repoElement.appendChild(repoUser);
-  repoElement.appendChild(repoProject);
+  const status = splitOutput(splited, 'Desempenho');
+  const requiredReqs = splitOutput(splited, 'requisitos obrigatórios');
+  const totalReqs = splitOutput(splited, 'requisitos totais');
 
-  document.getElementById('output').appendChild(repoElement);
+  return { status, requiredReqs, totalReqs };
 }
 
-async function getRepos(cohort, project) {
-  const JSON = await api.query(`repos/tryber/${cohort}-project-${project}/pulls`);
-  if (JSON) return JSON;
-}
+async function getInfo(cohort, project) {
+  const pullRequestsJSON = await api.query(
+    `repos/tryber/${cohort}-project-${project}/pulls`
+    // expect all PRs
+  );
 
-async function appendRepos() {
-  // const reposList = await getRepos(cohort, project);
-  const reposList = await getRepos('sd-014-a', 'pixels-art');
+  pullRequestsJSON.forEach(async ({ number, user, comments_url }) => {
+    const prNumber = number;
+    const name = user.login;
 
-  reposList.forEach((repo) => {
-    createRepoElement(repo.user.login, repo.title);
-    console.log(repo);
+    const commentJSON = await api.query(comments_url);
+    // Arrumar o parâmetro query!!!
+    const comment = commentJSON
+      .reverse()
+      .find((comment) => comment.body.includes('Resultado do projeto'))['body'];
+
+    const { status, requiredReqs, totalReqs } = getProjectStatus(comment);
+
+    // prNumber, name, status, requiredReqs, totalReqs
+    // calls function that creates table
   });
 }
 
-// Biza
+// Testing results
+// getInfo('sd-014-a', 'pixels-art');
 
 // element initialization on page load
 window.onload = () => {
   // set the GitHub API base URL
   api.baseURL = 'https://api.github.com/';
   // load DOM selectors
-  selector.add('user_button', 'user_input', 'repos_button', 'repos_input', 'output');
+  selector.add(
+    'user_button',
+    'user_input',
+    'repos_button',
+    'repos_input',
+    'output'
+  );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
   selector.repos_button.addEventListener('click', appendRepos);
