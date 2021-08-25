@@ -1,15 +1,11 @@
-// GitHub API base URL
-const baseURL = 'https://api.github.com/';
+import { api } from './api';
 
 // object that stores DOM selectors
 const selector = {
-  add: (...ids) => ids.forEach((id) => selector[id] = document.getElementById(id)),
+  add: (...ids) => ids.forEach((id) => { selector[id] = document.getElementById(id); }),
 };
 
-// errorMsg: output a formatted error message to the screen
-const errorMsg = (msg) => alert(`[Error] ${msg}`);
-
-// createCustomAnchorElement: object that creates custom DOM elements
+// createCustomElement: object that creates custom DOM elements
 const createCustomElement = {
   // a(href, text): returns a custom <a> element with provided href and text parameters
   a: (href, text) => {
@@ -18,26 +14,21 @@ const createCustomElement = {
     anchor.appendChild(document.createTextNode(text));
     return anchor;
   },
+  // td(contents): returns a custom <td> element with the provided text content
+  td: (contents) => {
+    const td = document.createElement('td');
+    td.className = 'pr-cell';
+    td.textContent = contents;
+    return td;
+  },
+  // tr(...tds): returns a custom <tr> element with the given <td>'s
+  tr: (...tds) => {
+    const tr = document.createElement('tr');
+    tr.className = 'pr-line';
+    tds.forEach((td) => tr.appendChild(createCustomElement.td(td)));
+    return tr;
+  },
 };
-
-// queryAPI(query): queries the GitHub API and returns the response as a JSON-formatted object
-async function queryAPI(query) {
-  try {
-    const responseRaw = await fetch(query);
-    const responseJSON = await responseRaw.json();
-    if (responseJSON.message === 'Not Found') {
-      throw `User ${user} not found!`;
-    }
-    return responseJSON;
-  } catch (error) {
-    errorMsg(error);
-    return null;
-  }
-};
-
-async function getUser(userID) {
-
-}
 
 // addUser(): reads the .user_input text input and adds a custom hyperlink to the user's GitHub profile
 async function addUser() {
@@ -45,7 +36,7 @@ async function addUser() {
   if (!user || user.length === 0) {
     return;
   }
-  const JSON = await queryAPI(`${baseURL}users/${user}`);
+  const JSON = await api.query(`users/${user}`);
   selector.output.appendChild(createCustomElement.a(JSON.html_url, `${JSON.login} (${JSON.name})`));
 }
 
@@ -66,10 +57,8 @@ function createRepoElement(user, project) {
 }
 
 async function getRepos(cohort, project) {
-  const responseRaw = await fetch(`${baseURL}repos/tryber/${cohort}-project-${project}/pulls`);
-  const responseJSON = await responseRaw.json();
-
-  if (responseJSON) return responseJSON;
+  const JSON = await api.query(`repos/tryber/${cohort}-project-${project}/pulls`);
+  if (JSON) return JSON;
 }
 
 async function appendRepos() {
@@ -77,7 +66,7 @@ async function appendRepos() {
   const reposList = await getRepos('sd-014-a', 'pixels-art');
 
   reposList.forEach((repo) => {
-    createRepoElement(repo.user.login, repo.title )
+    createRepoElement(repo.user.login, repo.title);
     console.log(repo);
   });
 }
@@ -86,11 +75,13 @@ async function appendRepos() {
 
 // element initialization on page load
 window.onload = () => {
+  // set the GitHub API base URL
+  api.baseURL = 'https://api.github.com/';
   // load DOM selectors
   selector.add('user_button', 'user_input', 'repos_button', 'repos_input', 'output');
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
   selector.repos_button.addEventListener('click', appendRepos);
+};
 
-  console.log(selector);
-}
+export { createCustomElement, selector };
