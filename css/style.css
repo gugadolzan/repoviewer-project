@@ -118,20 +118,36 @@ select {
   color: var(--ice);
 }
 
-footer {
+main {
+  margin-bottom: 200px;
+}
+
+.footer {
+  display: flex;
   color: var(--ice);
   background-color: var(--grey);
   height: 80px;
-  justify-content: space-around;
-  align-items: center;
-  position: absolute;
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  top: 950px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
 }
 
 #white-rocket {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 10px;
+  width: 50px;
+  height: 50px;
 }
-
