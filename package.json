@@ -3,21 +3,36 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "verbose": true,
+    "transform": {}
+  },
+  "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
+    "lint:styles": "stylelint **/*.css --config .stylelintrc.json --ignore-disables --allow-empty-input"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gugadolzan/sd-014-a-project-bonus.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "javascript",
+    "tests",
+    "jest"
+  ],
+  "author": "Gustavo Dolzan, Lys Prestes, Marcello Alves e Pally Oiveira.",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/gugadolzan/sd-014-a-project-bonus/issues"
   },
   "homepage": "https://github.com/gugadolzan/sd-014-a-project-bonus#readme",
   "devDependencies": {
+    "eslint-config-trybe-fundamentals": "^1.1.1",
     "jest": "^27.0.6"
+  },
+  "dependencies": {
+    "stylelint": "^13.13.1"
   }
 }
