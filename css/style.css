@@ -75,20 +75,33 @@ body {
   line-height: 1;
   box-sizing: border-box;
   outline: none;
+  font-style: italic; /* pally */
 }
 
 .custom-search-botton,
 select {
   position: absolute;
+  /* top: 3px;
   right: 3px;
-  top: 3px;
-  bottom: 3px;
+  padding: 0 6px;
+  bottom: 3px; */
   background: var(--green);
   color: var(--white);
-  padding: 0 6px;
   border-radius: 10px; /* pally */
 }
 
+select {
+  top: 3px;
+  padding: 6px;
+  bottom: 3px;
+}
+
+button {
+  top: 3px;
+  bottom: 3px;
+  right: 3px;
+  padding: 6px;
+}
 .github-corner {
   width: 80px;
   height: 80px;
