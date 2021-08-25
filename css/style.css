@@ -3,7 +3,7 @@
  * Author: Tim Holman
  */
 
- @import "corner.css";
+@import "corner.css";
 
 :root {
   --black: #22272E;
@@ -51,6 +51,7 @@ body {
 .container {
   display: flex;
   justify-content: space-around;
+  padding-top: 120px;
 }
 
 .in-container {
@@ -109,7 +110,7 @@ select {
   font-size: 45px;
   line-height: 28px;
   text-align: center;
-  margin-top: 0px;
+  margin-top: 50px;
   margin-bottom: 0px;
 }
 
@@ -133,3 +134,4 @@ footer {
   margin-left: auto;
   margin-right: auto;
 }
+
