@@ -26,7 +26,7 @@
 }
 
 #header {
-  background-color: var(--grey);
+  background-color: var(--grey); 
   height: 80px;
   justify-content: space-around;
   align-items: center;
@@ -46,7 +46,8 @@
 }
 
 body {
-  background-color: var(--black);
+  background-color: var(--black); 
+
 }
 
 /* search buttons */
@@ -137,8 +138,9 @@ main {
 .footer {
   display: flex;
   color: var(--ice);
-  background-color: var(--grey);
-  height: 80px;
+  background-color: var(--black);
+  /* background-color: black; */
+  height: 50px;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -153,6 +155,7 @@ main {
 
 a {
   text-decoration: none;
+  color: var(--green);
 }
 
 #white-rocket {
