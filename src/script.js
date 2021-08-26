@@ -3,6 +3,33 @@ import createCustomElement from './createCustomElement.js';
 import storage from './storage.js';
 import data from './data.js';
 
+async function getReposInfo(cohort) {
+  cohort = cohort || 'sd-014-a';
+
+  // gets team (cohort) id
+  const cohortID = data.teamsID[`students-` + cohort];
+  const repos = await api.query(
+    `/organizations/55410300/team/${cohortID}/repos`
+  );
+
+  // gets project repos
+  const projectRepos = repos.reduce((acc, repo) => {
+    // checks if repo is a project repo
+    if (data.projects.some((project) => repo.name.includes(project)))
+      return [
+        ...acc,
+        repo.pulls_url
+          .split('https://api.github.com')[1]
+          .split('{/number}')[0]
+          .replace('tryber', '{org}'),
+      ];
+    return acc;
+  }, []);
+
+  return projectRepos;
+  // returns array of project repos query strings
+}
+
 // object that stores DOM selectors
 const selector = {
   add: (...ids) =>
