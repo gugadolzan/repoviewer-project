@@ -67,25 +67,9 @@ function getProjectStatus(comment) {
   return [status, criteria, mandatoryReqs, totalReqs];
 }
 
-/* // getRepoInfo: returns an array with grades info from all PR's in a repo
-async function getRepoInfo(cohort, project) {
-  const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
-  const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
-  
-  const values = pullRequestsJSON.map(async (element) => { // for each PR...
-    const { number, user } = element; // get the PR number and user info
-    const comments = await api.query(`${baseQuery}/issues/${number}/comments?per_page=100`); // call the API to get the comments
-    const comment = comments.reverse().find((c) => c.body.includes('Resultado do projeto')).body; // look for the 'grades' comment
-    return [number, createCustomElement.a(user.html_url, user.login), ...getProjectStatus(comment)]; // parse the info from the comment and return thre results
-  });
-  const results = await Promise.all(values); // call Promises.all to fullfill all promises
-  return results; // return the fullfilled array
-} */
-
 // getRepo: reads user input and prints a table with grade information from a repo
 async function getRepo(cohort, project) {
-  const loading = createCustomElement.span('loading', `Loading ${project}...`);
-  selector.output.appendChild(loading);
+  selector.loading.textContent = `loading ${cohort}-project-${project}...`;
 
   const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
   const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
@@ -94,7 +78,7 @@ async function getRepo(cohort, project) {
     // for each PR...
     const { number, user } = element; // get the PR number and user info
     const comments = await api.query(
-      `${baseQuery}/issues/${number}/comments?per_page=100`
+      `${baseQuery}/issues/${number}/comments?per_page=100`,
     ); // call the API to get the comments
     const comment = comments
       .reverse()
@@ -106,11 +90,9 @@ async function getRepo(cohort, project) {
     ]; // parse the info from the comment and return thre results
   });
   const results = await Promise.all(values); // call Promises.all to fullfill all promises
-  results.sort((a, b) => Number(a[0]) - Number(b[0]));
-  console.log(results);
+  results.sort((a, b) => Number(a[0]) - Number(b[0])); // sort the results
 
-  const header = [
-    // define a header...
+  const header = [ // define a header...
     'Núm.',
     'Usuário',
     'Desempenho',
@@ -119,12 +101,18 @@ async function getRepo(cohort, project) {
     'Req.<br>Totais',
   ];
 
-  selector.output.lastChild.remove();
-  selector.output.appendChild(createCustomElement.table(header, results)); // ...and add a table to the #output
+  selector.loading.textContent = 'idle.';
+  const count = Number(selector.accordionOutput.children.length) + 1;
+  selector.accordionOutput.appendChild(createCustomElement.accordionItem(
+    count,
+    'accordionOutput',
+    createCustomElement.span(`${cohort}-project-${project}`, `${cohort}-project-${project}`),
+    createCustomElement.table(header, results),
+  ));
 }
 
 function addRepo() {
-  // const cohort = selector.cohort.value; // get cohort name from the the #cohort select
+  // const cohort = selector.repos_cohort.value; // get cohort name from the the #cohort select
   // const project = selector.repos_input.value; // get project name from the #repos_input input
   const cohort = 'sd-014-a';
   const project = 'pixels-art';
@@ -142,10 +130,13 @@ window.onload = () => {
   selector.add(
     'user_button',
     'user_input',
+    'user_cohort',
     'repos_button',
     'repos_input',
-    'cohort',
-    'output'
+    'repos_cohort',
+    'status',
+    'loading',
+    'accordionOutput',
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
@@ -154,7 +145,10 @@ window.onload = () => {
   // read from localStorage and restore saved repos
   const savedRepos = storage.read('repos');
   if (savedRepos) {
-    savedRepos.forEach((repo) => getRepo(repo.cohort, repo.project));
+    savedRepos.forEach((repo) => {
+      getRepo(repo.cohort, repo.project);
+      console.log(repo);
+    });
   }
 };
 

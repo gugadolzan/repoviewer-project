@@ -126,15 +126,11 @@ button {
   margin-bottom: 0px;
 }
 
-#output {
+.status {
   color: var(--ice);
-}
-
-#loading {
   font-size: 22px;
   display: table;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 10px auto 10px auto;
 }
 
 main {

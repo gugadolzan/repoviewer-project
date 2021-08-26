@@ -10,12 +10,45 @@ const createCustomElement = {
     return anchor; // return the assembled <a> custom element
   },
 
+  accordionItem: (itemId, parentId, title, contents) => {
+    const ai = createCustomElement.div(`item${itemId}`, 'accordion-item');
+    const h2 = createCustomElement.h2(`heading${itemId}`, 'accordion-header');
+    const button = createCustomElement.button(`collapse${itemId}`, 'accordion-button');
+    button.appendChild(title);
+    h2.appendChild(button);
+    ai.appendChild(h2);
+    const div = createCustomElement.div(`collapse${itemId}`, 'accordion-collapse collapse');
+    div.setAttribute('aria-labelledby', `heading${itemId}`);
+    div.setAttribute('data-bs-parent', `#${parentId}`);
+    div.appendChild(contents);
+    ai.appendChild(div);
+    return ai;
+  },
+
+  button: (target, className) => {
+    const button = document.createElement('button'); // create a new <button> element
+    button.className = className; // set the class
+    button.setAttribute('type', 'button'); 
+    button.setAttribute('data-bs-target', `#${target}`); 
+    button.setAttribute('data-bs-toggle', 'collapse'); 
+    button.setAttribute('aria-controls', target); 
+    button.setAttribute('aria-expanded', 'false'); 
+    return button; // return the assembled <button> custom element
+  },
+
   // div(id, className): returns a custom <div> element with provided id and class parameters
   div: (id, className) => {
     const div = document.createElement('div'); // create a new <div> element
     div.id = id; // set the id name
     div.className = className; // set the class
     return div; // return the assembled <div> custom element
+  },
+
+  h2: (id, className) => {
+    const h2 = document.createElement('h2'); // create a new <h2> element
+    h2.id = id; // set the id name
+    h2.className = className; // set the class
+    return h2; // return the assembled <h2 custom element
   },
 
   // section(id, className): returns a custom <section> element with provided id and class parameters
