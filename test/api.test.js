@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
- import selector from '../src/script';
+ import api from '../src/api';
 
  // selector
 describe('lorem ipsum', () => {
