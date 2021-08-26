@@ -79,12 +79,13 @@ body {
 }
 
 .custom-search-botton,
-select {
+select { 
   position: absolute;
   /* top: 3px;
   right: 3px;
   padding: 0 6px;
   bottom: 3px; */
+  margin-top: 150px;
   background: var(--green);
   color: var(--white);
   border-radius: 10px; /* pally */
@@ -137,6 +138,11 @@ button {
   margin-right: auto;
 }
 
+.accordion {
+  padding: 10px;
+  margin: 5%;
+}
+
 main {
   margin-bottom: 200px;
 }
@@ -178,6 +184,23 @@ a {
   background-color: var(--green);
 }
 
-.pr-cell:hover {
-  background-color: var(--light-grey);
+.pr-line:hover {
+  background-color: var(--white);
+}
+
+tr:nth-child(even) {
+  background-color: var(--ice);
+}
+
+tr {
+  background-color: var(--white);
+}
+
+.accordion-item {
+  /* background-color: pink; */
+  background-color: var(--black);
+}
+
+.accordion-collapse {
+  background-color: var(--black);
 }
