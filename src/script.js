@@ -78,40 +78,34 @@ async function addUser() {
 
 // SUPERBIZA
 
-const splitOutput = (comment, param) =>
-  comment
-    .find((item) => item.includes(param))
-    .split('|')[1]
-    .trim();
-
+// getProjectStatus: parses a comment string and returns status, criteria, mandatoryReqs, totalReqs
 function getProjectStatus(comment) {
-  const splited = comment.split('\n');
+  const splitOutput = (txt, param) => txt.find((item) => item.includes(param)).split('|')[1].trim();
+  const splitted = comment.split('\n');
+  const status = splitOutput(splitted, 'Desempenho');
+  const criteria = splitOutput(splitted, 'Critério de Avaliação');
+  const mandatoryReqs = splitOutput(splitted, 'requisitos obrigatórios');
+  const totalReqs = splitOutput(splitted, 'requisitos totais');
 
-  const status = splitOutput(splited, 'Desempenho');
-  const criteria = splitOutput(splited, 'Critério de Avaliação');
-  const mandatoryReqs = splitOutput(splited, 'requisitos obrigatórios');
-  const totalReqs = splitOutput(splited, 'requisitos totais');
-
-  return { status, criteria, mandatoryReqs, totalReqs };
+  return [status, criteria, mandatoryReqs, totalReqs];
 }
 
+// getRepoInfo: returns an array with grades info from all PR's in a repo
 async function getRepoInfo(cohort, project) {
   const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
   const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
   
   const values = pullRequestsJSON.map(async (element) => { // for each PR...
-    const { number, user } = element;
-    const comments = await api.query(`${baseQuery}/issues/${number}/comments?per_page=100`);
-    const comment = comments.reverse().find((c) => c.body.includes('Resultado do projeto')).body;
-    const line = getProjectStatus(comment);
-    line.number = number;
-    line.user = createCustomElement.a(user.html_url, user.login);
-    return line;
+    const { number, user } = element; // get the PR number and user info
+    const comments = await api.query(`${baseQuery}/issues/${number}/comments?per_page=100`); // call the API to get the comments
+    const comment = comments.reverse().find((c) => c.body.includes('Resultado do projeto')).body; // look for the 'grades' comment
+    return [number, createCustomElement.a(user.html_url, user.login), ...getProjectStatus(comment)]; // parse the info from the comment and return thre results
   });
-  const result = await Promise.all(values);
-  return result;
+  const results = await Promise.all(values); // call Promises.all to fullfill all promises
+  return results; // return the fullfilled array
 }
 
+// getRepo: reads user input and prints a table with grade information from a repo
 async function getRepo() {
   // const cohort = selector.cohort.value; // get cohort name from the the #cohort select
   // const project = selector.repos_input.value; // get project name from the #repos_input input
@@ -119,24 +113,18 @@ async function getRepo() {
   const project = 'pixels-art';
 
   const results = await getRepoInfo(cohort, project);
-  results.sort((a, b) => Number(a.number) - Number(b.number));
+  results.sort((a, b) => Number(a[0]) - Number(b[0]));
+  console.log(results);
 
-  const table = document.createElement('table'); // create a new <table> element
-  table.className = 'pr-table'; // set the class name as 'pr-table'
-  const header = ['Número', 'Usuário', 'Desempenho', 'Critério', 'Reqs. Obrigs.', 'Reqs. Totais']; // define a header...
-  table.appendChild(createCustomElement.trh(...header)); // ...and append it as a custom <tr> of <th> elements
-  results.forEach((result) => { // for each PR...
-      const { number, user, status, criteria, mandatoryReqs, totalReqs } = result; // ...destructure from the object...
-      table.appendChild(createCustomElement.trd(
-        number,
-        user,
-        status,
-        criteria,
-        mandatoryReqs,
-        totalReqs,
-      )); // ...and append each line as a custom <tr> of <td> elements
-    });
-  selector.output.appendChild(table); // append the assembled table as a child of #output
+  const header = [ // define a header...
+    'Núm.',
+    'Usuário',
+    'Desempenho',
+    'Critério de<br>Avaliação',
+    'Req.<br>Obrigatórios',
+    'Req.<br>Totais',
+  ];
+  selector.output.appendChild(createCustomElement.table(header, results)); // ...and add a table to the #output
 }
 
 // element initialization on page load

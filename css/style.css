@@ -137,8 +137,7 @@ main {
 .footer {
   display: flex;
   color: var(--ice);
-  background-color: var(--black);
-  /* background-color: black; */
+ background-color: var(--black); 
   height: 50px;
   position: fixed;
   bottom: 0;
@@ -159,7 +158,10 @@ a {
 
 /* tables */
 .pr-table {
-  background-color: var(--ice);
+  /* background-color: var(--ice); */
+  margin: auto;
+  margin-top: 50px;
+  border: solid 1px black;
 }
 
 .pr-header {
