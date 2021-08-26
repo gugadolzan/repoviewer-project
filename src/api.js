@@ -9,7 +9,7 @@ const api = {
   options: {
     method: 'GET',
     headers: {
-      authorization: 'token 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',
+      authorization: 'token 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',
     },
     org: 'tryber',
   },

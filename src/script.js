@@ -1,10 +1,14 @@
 import api from './api.js';
 import createCustomElement from './createCustomElement.js';
 import storage from './storage.js';
+import data from './data.js';
 
 // object that stores DOM selectors
 const selector = {
-  add: (...ids) => ids.forEach((id) => { selector[id] = document.getElementById(id); }),
+  add: (...ids) =>
+    ids.forEach((id) => {
+      selector[id] = document.getElementById(id);
+    }),
 };
 
 // addUser(): reads the .user_input text input and adds a custom hyperlink to the user's GitHub profile
@@ -14,13 +18,19 @@ async function addUser() {
     return;
   }
   const JSON = await api.query(`/users/${user}`);
-  selector.output.appendChild(createCustomElement.a(JSON.html_url, `${JSON.login} (${JSON.name})`));
+  selector.output.appendChild(
+    createCustomElement.a(JSON.html_url, `${JSON.login} (${JSON.name})`)
+  );
 }
 
 // getProjectStatus: parses a comment string and returns status, criteria, mandatoryReqs, totalReqs
 function getProjectStatus(comment) {
-  const splitOutput = (txt, param) => txt.find((item) => item.includes(param)).split('|')[1].trim();
-  
+  const splitOutput = (txt, param) =>
+    txt
+      .find((item) => item.includes(param))
+      .split('|')[1]
+      .trim();
+
   const splitted = comment.split('\n');
   const status = splitOutput(splitted, 'Desempenho');
   const criteria = splitOutput(splitted, 'Critério de Avaliação');
@@ -52,18 +62,28 @@ async function getRepo(cohort, project) {
 
   const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
   const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
-  
-  const values = pullRequestsJSON.map(async (element) => { // for each PR...
+
+  const values = pullRequestsJSON.map(async (element) => {
+    // for each PR...
     const { number, user } = element; // get the PR number and user info
-    const comments = await api.query(`${baseQuery}/issues/${number}/comments?per_page=100`); // call the API to get the comments
-    const comment = comments.reverse().find((c) => c.body.includes('Resultado do projeto')).body; // look for the 'grades' comment
-    return [number, createCustomElement.a(user.html_url, user.login), ...getProjectStatus(comment)]; // parse the info from the comment and return thre results
+    const comments = await api.query(
+      `${baseQuery}/issues/${number}/comments?per_page=100`
+    ); // call the API to get the comments
+    const comment = comments
+      .reverse()
+      .find((c) => c.body.includes('Resultado do projeto')).body; // look for the 'grades' comment
+    return [
+      number,
+      createCustomElement.a(user.html_url, user.login),
+      ...getProjectStatus(comment),
+    ]; // parse the info from the comment and return thre results
   });
   const results = await Promise.all(values); // call Promises.all to fullfill all promises
   results.sort((a, b) => Number(a[0]) - Number(b[0]));
   console.log(results);
 
-  const header = [ // define a header...
+  const header = [
+    // define a header...
     'Núm.',
     'Usuário',
     'Desempenho',
@@ -98,7 +118,7 @@ window.onload = () => {
     'repos_button',
     'repos_input',
     'cohort',
-    'output',
+    'output'
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
