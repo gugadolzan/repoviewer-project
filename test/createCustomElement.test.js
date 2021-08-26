@@ -6,7 +6,7 @@
 
 // createCustomElement 
 describe('Verificar o retorno da função CreateCustomElement no HTML', () => {
-  test('1. Verifica se o atributo "href" retorna o HTML', () => {
+  test('1. Verifica se o atributo "a" retorna o HTML', () => {
     const result = createCustomElement.a('http://github.com/lysprestes', 'lysprestes');
     expect(result).not.toBeNull();
     expect(result.href).toEqual('http://github.com/lysprestes');

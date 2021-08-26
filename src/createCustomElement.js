@@ -10,6 +10,22 @@ const createCustomElement = {
     return anchor; // return the assembled <a> custom element
   },
 
+  // div(id, className): returns a custom <div> element with provided id and class parameters
+  div: (id, className) => {
+    const div = document.createElement('div'); // create a new <div> element
+    div.id = id; // set the id name
+    div.className = className; // set the class
+    return div; // return the assembled <div> custom element
+  },
+
+  // section(id, className): returns a custom <section> element with provided id and class parameters
+  section: (id, className) => {
+    const section = document.createElement('section'); // create a new <section> element
+    section.id = id; // set the id name
+    section.className = className; // set the class
+    return section; // return the assembled <div> custom element
+  },
+
   // span(text): returns a custom <span> element with provided id and text parameters
   span: (id, text) => {
     const span = document.createElement('span'); // create a new <span> element
