@@ -42,8 +42,7 @@ function getProjectStatus(comment) {
 
 // getRepo: reads user input and prints a table with grade information from a repo
 async function getRepo(cohort, project) {
-  const loading = createCustomElement.span('loading', `Loading ${project}...`);
-  selector.output.appendChild(loading);
+  selector.loading.textContent = `loading ${cohort}-project-${project}...`;
 
   const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
   const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
@@ -52,7 +51,7 @@ async function getRepo(cohort, project) {
     // for each PR...
     const { number, user } = element; // get the PR number and user info
     const comments = await api.query(
-      `${baseQuery}/issues/${number}/comments?per_page=100`
+      `${baseQuery}/issues/${number}/comments?per_page=100`,
     ); // call the API to get the comments
     const comment = comments
       .reverse()
@@ -75,7 +74,7 @@ async function getRepo(cohort, project) {
     'Req.<br>Totais',
   ];
 
-  selector.output.lastChild.remove();
+  selector.loading.textContent = 'idle.';
   const count = Number(selector.accordionOutput.children.length) + 1;
   selector.accordionOutput.appendChild(createCustomElement.accordionItem(
     count,
@@ -86,9 +85,9 @@ async function getRepo(cohort, project) {
 }
 
 function addRepo() {
-  const cohort = selector.cohort.value; // get cohort name from the the #cohort select
+  // const cohort = selector.repos_cohort.value; // get cohort name from the the #cohort select
   // const project = selector.repos_input.value; // get project name from the #repos_input input
-  // const cohort = 'sd-014-a';
+  const cohort = 'sd-014-a';
   const project = 'pixels-art';
 
   const savedRepos = storage.read('repos');
@@ -104,10 +103,12 @@ window.onload = () => {
   selector.add(
     'user_button',
     'user_input',
+    'user_cohort',
     'repos_button',
     'repos_input',
-    'cohort',
-    'output',
+    'repos_cohort',
+    'status',
+    'loading',
     'accordionOutput',
   );
   // add event listeners
@@ -117,7 +118,10 @@ window.onload = () => {
   // read from localStorage and restore saved repos
   const savedRepos = storage.read('repos');
   if (savedRepos) {
-    savedRepos.forEach((repo) => getRepo(repo.cohort, repo.project));
+    savedRepos.forEach((repo) => {
+      getRepo(repo.cohort, repo.project);
+      console.log(repo);
+    });
   }
 };
 

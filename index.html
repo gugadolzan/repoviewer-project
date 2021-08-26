@@ -48,6 +48,12 @@
           <input type="text" class="custom-search-input" placeholder="Nome do Usuário" id="user_input">
           <button class="custom-search-botton" type="submit" id="user_button">Search</button>
         </div>
+        <select name="cohort" class="custom-search" id="user_cohort">
+          <option selected value="sd-014-a">Turma 14 - Tribo A</option>
+          <option value="sd-014-b">Turma 14 - Tribo B</option>
+          <option value="sd-015-a">Turma 15 - Tribo A</option>
+          <option value="sd-015-b">Turma 15 - Tribo B</option>
+        </select>
       </div>
 
       <div class="in-container">
@@ -56,9 +62,8 @@
           <input type="text" class="custom-search-input" placeholder="Nome do Repositório" id="repos_input">
           <button class="custom-search-botton" type="submit" id="repos_button">Search</button>
         </div>
-        <select name="cohort" class="custom-search" id="cohort">
-          <option disabled selected value>Tribo</option>
-          <option value="sd-014-a">Turma 14 - Tribo A</option>
+        <select name="cohort" class="custom-search" id="repos_cohort">
+          <option selected value="sd-014-a">Turma 14 - Tribo A</option>
           <option value="sd-014-b">Turma 14 - Tribo B</option>
           <option value="sd-015-a">Turma 15 - Tribo A</option>
           <option value="sd-015-b">Turma 15 - Tribo B</option>
@@ -66,8 +71,8 @@
       </div>
     </section>
 
-    <section>
-      <span id="output"></span>
+    <section class="status" id="status">
+      <span>Status: </span><span id="loading">idle.</span>
     </section>
 
     <section class="accordion" id="accordionOutput">
