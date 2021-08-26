@@ -58,7 +58,9 @@ const createCustomElement = {
   // trh(...ths): returns a custom <tr> element with the given <th>'s
   trh: (...ths) => {
     const trh = document.createElement('tr'); // create a new <tr> element
-    trh.className = 'pr-line'; // set the class name as 'pr-line'
+    trh.className = 'pr-header'; // set the class name as 'pr-line'
+    trh.setAttribute('data-toggle', 'collapse');
+    trh.setAttribute('data-target', '.pr-line');
     ths.forEach((th) => trh.appendChild(createCustomElement.th(th))); // append all headers as custom <th> elements
     return trh; // return the assembled <tr> custom element
   },
@@ -86,40 +88,54 @@ function getProjectStatus(comment) {
   const splited = comment.split('\n');
 
   const status = splitOutput(splited, 'Desempenho');
-  const criterio = splitOutput(splited, 'Critério de Avaliação');
-  const requiredReqs = splitOutput(splited, 'requisitos obrigatórios');
+  const criteria = splitOutput(splited, 'Critério de Avaliação');
+  const mandatoryReqs = splitOutput(splited, 'requisitos obrigatórios');
   const totalReqs = splitOutput(splited, 'requisitos totais');
 
-  return { status, criterio, requiredReqs, totalReqs };
+  return { status, criteria, mandatoryReqs, totalReqs };
 }
 
-async function getInfo() {
+async function getRepoInfo(cohort, project) {
+  const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
+  const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
+  
+  const values = pullRequestsJSON.map(async (element) => { // for each PR...
+    const { number, user } = element;
+    const comments = await api.query(`${baseQuery}/issues/${number}/comments?per_page=100`);
+    const comment = comments.reverse().find((c) => c.body.includes('Resultado do projeto')).body;
+    const line = getProjectStatus(comment);
+    line.number = number;
+    line.user = createCustomElement.a(user.html_url, user.login);
+    return line;
+  });
+  const result = await Promise.all(values);
+  return result;
+}
+
+async function getRepo() {
   // const cohort = selector.cohort.value; // get cohort name from the the #cohort select
   // const project = selector.repos_input.value; // get project name from the #repos_input input
   const cohort = 'sd-014-a';
   const project = 'pixels-art';
 
-  const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
-  const pullRequestsJSON = await api.query(`${baseQuery}/pulls`); // get list of PR's from the GitHub API
+  const results = await getRepoInfo(cohort, project);
+  results.sort((a, b) => Number(a.number) - Number(b.number));
 
   const table = document.createElement('table'); // create a new <table> element
   table.className = 'pr-table'; // set the class name as 'pr-table'
   const header = ['Número', 'Usuário', 'Desempenho', 'Critério', 'Reqs. Obrigs.', 'Reqs. Totais']; // define a header...
   table.appendChild(createCustomElement.trh(...header)); // ...and append it as a custom <tr> of <th> elements
-
-  pullRequestsJSON.forEach(async ({ number, user }) => { // for each PR...
-    const comments = await api.query(`${baseQuery}/issues/${number}/comments?per_page=100`);
-    const comment = comments.reverse().find((c) => c.body.includes('Resultado do projeto'))['body'];
-    const { status, criterio, requiredReqs, totalReqs } = getProjectStatus(comment);
-    table.appendChild(createCustomElement.trd( // ...and append each line as a custom <tr> of <td> elements
-      number,
-      createCustomElement.a(user.html_url, user.login),
-      status,
-      criterio,
-      requiredReqs,
-      totalReqs,
-    ));
-  });
+  results.forEach((result) => { // for each PR...
+      const { number, user, status, criteria, mandatoryReqs, totalReqs } = result; // ...destructure from the object...
+      table.appendChild(createCustomElement.trd(
+        number,
+        user,
+        status,
+        criteria,
+        mandatoryReqs,
+        totalReqs,
+      )); // ...and append each line as a custom <tr> of <td> elements
+    });
   selector.output.appendChild(table); // append the assembled table as a child of #output
 }
 
@@ -136,7 +152,7 @@ window.onload = () => {
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
-  selector.repos_button.addEventListener('click', getInfo);
+  selector.repos_button.addEventListener('click', getRepo);
 };
 
 // export objects for testing
