@@ -28,7 +28,7 @@ O intuito do projeto é provisionar que os estudantes da Trybe, possam consultar
 
 ## Resultado
 
-*Inserir aqui imagem do resultado do projeto*
+![RepoViewer](https://github.com/gugadolzan/repoviewer-project/blob/main/imgs/repoviewer-online.png?raw=true)
 
 ## Contribuidores
 
