@@ -79,12 +79,13 @@ body {
 }
 
 .custom-search-botton,
-select {
+select { 
   position: absolute;
   /* top: 3px;
   right: 3px;
   padding: 0 6px;
   bottom: 3px; */
+  /* margin-top: 150px; */
   background: var(--green);
   color: var(--white);
   border-radius: 10px; /* pally */
@@ -133,6 +134,11 @@ button {
   margin: 10px auto 10px auto;
 }
 
+.accordion {
+  padding: 10px;
+  margin: 5%;
+}
+
 main {
   margin-bottom: 200px;
 }
@@ -161,19 +167,38 @@ a {
 }
 
 /* tables */
-.pr-table {
-  /* background-color: var(--ice); */
+.pr-header, .pr-table {
+  display: flexbox;
   margin: auto;
-  margin-top: 50px;
-  border: solid 1px black;
-  width: 50%;
+  align-items: center;  
   text-align: center;
+  color: var(--white);
 }
 
 .pr-header {
   background-color: var(--green);
 }
 
-.pr-cell:hover {
+.pr-line:hover {
+  background-color: var(--blue);
+}
+
+tr:nth-child(even) {
   background-color: var(--light-grey);
+}
+
+tr {
+  background-color: var(--black);
+}
+
+#item1, .accordion-item {
+  background-color: var(--black);
+}
+
+.accordion-collapse {
+  background-color: var(--black);
+}
+
+#heading1 {
+  padding: 5px;
 }
