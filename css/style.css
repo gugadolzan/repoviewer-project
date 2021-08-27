@@ -98,6 +98,13 @@ button {
   padding: 6px;
 }
 
+#clear_btn {
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  padding: 2%;
+}
+
 .github-corner {
   width: 80px;
   height: 80px;
@@ -121,11 +128,13 @@ button {
   margin-bottom: 0;
 }
 
-.status {
+#status {
   color: var(--ice);
   font-size: 22px;
-  display: table;
   margin: 10px auto;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-right: 2%;
 }
 
 .accordion {

@@ -168,6 +168,12 @@ function addRepo() {
   // }
 }
 
+// erase Button
+function erase() {
+  storage.clear('repos');
+  selector.accordionOutput.innerHTML = '';
+}
+
 // element initialization on page load
 window.onload = () => {
   // testing
@@ -182,10 +188,12 @@ window.onload = () => {
     'repos_cohort',
     'status',
     'accordionOutput',
+    'clear_btn',
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
   selector.repos_button.addEventListener('click', addRepo);
+  selector.clear_btn.addEventListener('click', erase);
 
   // dynamically build the cohort list
   Object.keys(data.teamsID).forEach((key) => {
