@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 
- import api from '../src/api';
+import api from '../src/api';
 
- // selector
+// selector
 describe('lorem ipsum', () => {
   test('1. lorem', () => {
     expect(true).not.toBeNull();

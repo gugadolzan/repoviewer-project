@@ -13,11 +13,17 @@ const createCustomElement = {
   accordionItem: (itemId, parentId, title, contents) => {
     const ai = createCustomElement.div(`item${itemId}`, 'accordion-item');
     const h2 = createCustomElement.h2(`heading${itemId}`, 'accordion-header');
-    const button = createCustomElement.button(`collapse${itemId}`, 'accordion-button');
+    const button = createCustomElement.button(
+      `collapse${itemId}`,
+      'accordion-button'
+    );
     button.appendChild(title);
     h2.appendChild(button);
     ai.appendChild(h2);
-    const div = createCustomElement.div(`collapse${itemId}`, 'accordion-collapse collapse');
+    const div = createCustomElement.div(
+      `collapse${itemId}`,
+      'accordion-collapse collapse'
+    );
     div.setAttribute('aria-labelledby', `heading${itemId}`);
     div.setAttribute('data-bs-parent', `#${parentId}`);
     div.appendChild(contents);
@@ -28,11 +34,11 @@ const createCustomElement = {
   button: (target, className) => {
     const button = document.createElement('button'); // create a new <button> element
     button.className = className; // set the class
-    button.setAttribute('type', 'button'); 
-    button.setAttribute('data-bs-target', `#${target}`); 
-    button.setAttribute('data-bs-toggle', 'collapse'); 
-    button.setAttribute('aria-controls', target); 
-    button.setAttribute('aria-expanded', 'false'); 
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-bs-target', `#${target}`);
+    button.setAttribute('data-bs-toggle', 'collapse');
+    button.setAttribute('aria-controls', target);
+    button.setAttribute('aria-expanded', 'false');
     return button; // return the assembled <button> custom element
   },
 
@@ -87,10 +93,12 @@ const createCustomElement = {
   table: (header, rows) => {
     const table = document.createElement('table'); // create a new <table> element
     table.className = 'pr-table'; // set the class name as 'pr-table'
-    if (header) { // if a header array has been provided...
+    if (header) {
+      // if a header array has been provided...
       table.appendChild(createCustomElement.trh(...header)); // ...append it as a custom <th> element
     }
-    rows.forEach((row) => { // if an array of line arrays has been provided...
+    rows.forEach((row) => {
+      // if an array of line arrays has been provided...
       table.appendChild(createCustomElement.trd(...row)); // ...append each line as a custom <tr> element
     });
     return table; // return the assembled <table> custom element

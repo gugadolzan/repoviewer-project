@@ -1,4 +1,4 @@
-import { request } from "https://cdn.skypack.dev/@octokit/request";
+import { request } from 'https://cdn.skypack.dev/@octokit/request';
 
 // errorMsg: output a formatted error message to the screen
 const errorMsg = (msg) => alert(`[Error] ${msg}`);
@@ -9,7 +9,7 @@ const api = {
   options: {
     method: 'GET',
     headers: {
-      authorization: 'token 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',
+      authorization: 'token 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',
     },
     org: 'tryber',
   },
