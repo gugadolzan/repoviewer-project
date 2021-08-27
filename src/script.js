@@ -125,7 +125,7 @@ async function getRepo(cohort, project) {
 }
 
 function addRepo() {
-  const cohort = selector.repos_cohort.value; // get cohort name from the the #cohort select
+  const cohort = 'sd-014-a'; // get cohort name from the the #cohort select
   // const project = selector.repos_input.value; // get project name from the #repos_input input
   const project = 'pixels-art';
 
