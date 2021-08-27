@@ -3,6 +3,17 @@ import createCustomElement from './createCustomElement.js';
 import storage from './storage.js';
 import data from './data.js';
 
+const createsCohorts = () => {
+  const keys = Object.keys(data.teamsID);
+  keys.forEach((key) => {
+    const cohortOption = document.createElement('option');
+    cohortOption.value = key;
+    cohortOption.textContent = 'Turma ' + key.split('sd-0')[1].toUpperCase();
+    // append to selec id cohort
+    document.getElementById('cohort').appendChild(cohortOption);
+  });
+}
+
 async function getReposInfo(cohort = 'sd-014-a') {
   // gets team (cohort) id
   const cohortID = data.teamsID[cohort];
@@ -151,6 +162,8 @@ window.onload = () => {
       console.log(repo);
     });
   }
+
+  createsCohorts();
 };
 
 // export objects for testing
