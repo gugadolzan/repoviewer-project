@@ -3,11 +3,9 @@ import createCustomElement from './createCustomElement.js';
 import storage from './storage.js';
 import data from './data.js';
 
-async function getReposInfo(cohort) {
-  cohort = cohort || 'sd-014-a';
-
+async function getReposInfo(cohort = 'sd-014-a') {
   // gets team (cohort) id
-  const cohortID = data.teamsID[`students-` + cohort];
+  const cohortID = data.teamsID[cohort];
   const repos = await api.query(
     `/organizations/55410300/team/${cohortID}/repos`
   );
@@ -16,16 +14,11 @@ async function getReposInfo(cohort) {
   const projectRepos = repos.reduce((acc, repo) => {
     // checks if repo is a project repo
     if (data.projects.some((project) => repo.name.includes(project)))
-      return [
-        ...acc,
-        repo.pulls_url
-          .split('https://api.github.com')[1]
-          .split('{/number}')[0]
-          .replace('tryber', '{org}'),
-      ];
+      return [...acc, repo.pulls_url.split('tryber/')[1].split('/pulls')[0]];
     return acc;
   }, []);
 
+  console.log(projectRepos);
   return projectRepos;
   // returns array of project repos query strings
 }
@@ -78,7 +71,7 @@ async function getRepo(cohort, project) {
     // for each PR...
     const { number, user } = element; // get the PR number and user info
     const comments = await api.query(
-      `${baseQuery}/issues/${number}/comments?per_page=100`,
+      `${baseQuery}/issues/${number}/comments?per_page=100`
     ); // call the API to get the comments
     const comment = comments
       .reverse()
@@ -92,7 +85,8 @@ async function getRepo(cohort, project) {
   const results = await Promise.all(values); // call Promises.all to fullfill all promises
   results.sort((a, b) => Number(a[0]) - Number(b[0])); // sort the results
 
-  const header = [ // define a header...
+  const header = [
+    // define a header...
     'Núm.',
     'Usuário',
     'Desempenho',
@@ -103,12 +97,17 @@ async function getRepo(cohort, project) {
 
   selector.loading.textContent = 'idle.';
   const count = Number(selector.accordionOutput.children.length) + 1;
-  selector.accordionOutput.appendChild(createCustomElement.accordionItem(
-    count,
-    'accordionOutput',
-    createCustomElement.span(`${cohort}-project-${project}`, `${cohort}-project-${project}`),
-    createCustomElement.table(header, results),
-  ));
+  selector.accordionOutput.appendChild(
+    createCustomElement.accordionItem(
+      count,
+      'accordionOutput',
+      createCustomElement.span(
+        `${cohort}-project-${project}`,
+        `${cohort}-project-${project}`
+      ),
+      createCustomElement.table(header, results)
+    )
+  );
 }
 
 function addRepo() {
@@ -126,6 +125,8 @@ function addRepo() {
 
 // element initialization on page load
 window.onload = () => {
+  // testing
+  getReposInfo('sd-012');
   // load DOM selectors
   selector.add(
     'user_button',
@@ -136,7 +137,7 @@ window.onload = () => {
     'repos_cohort',
     'status',
     'loading',
-    'accordionOutput',
+    'accordionOutput'
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
