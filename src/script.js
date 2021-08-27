@@ -123,6 +123,12 @@ function addRepo() {
   // }
 }
 
+// erase Button
+function erase() {
+  storage.clear('repos');
+  selector.accordionOutput.innerHTML = '';
+}
+
 // element initialization on page load
 window.onload = () => {
   // testing
@@ -138,10 +144,12 @@ window.onload = () => {
     'status',
     'loading',
     'accordionOutput',
+    'clear_btn',
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
   selector.repos_button.addEventListener('click', addRepo);
+  selector.clear_btn.addEventListener('click', erase);
 
   // read from localStorage and restore saved repos
   const savedRepos = storage.read('repos');
