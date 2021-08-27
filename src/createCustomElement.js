@@ -51,13 +51,19 @@ const createCustomElement = {
     return h2; // return the assembled <h2 custom element
   },
 
-  // option(alue, text, selected): returns a custom <section> element with provided value, text and optional selected parameters
+  // option(value, text, selected): returns a custom <section> element with provided value, text and optional selected parameters
   option: (value, text, selected = false) => {
     const opt = document.createElement('option');
     opt.value = value;
     opt.textContent = text;
     if (selected) opt.selected = selected;
     return opt;
+  },
+
+  p: (text) => {
+    const p = document.createElement('p'); // create a new <p> element
+    p.textContent = text; // set the text
+    return p; // return the assembled <p> custom element
   },
 
   // section(id, className): returns a custom <section> element with provided id and class parameters
@@ -111,10 +117,10 @@ const createCustomElement = {
     } else {
       th.innerHTML = contents; // if it's not, set it as the text content
     }
-    th.addEventListener('click', ({ target }) => { // temporary remove action
-      target.parentNode.parentNode.remove();
-      storage.clear('repos');
-    });
+    // th.addEventListener('click', ({ target }) => { // temporary remove action
+    //   target.parentNode.parentNode.remove();
+    //   storage.clear('repos');
+    // });
     return th; // return the assembled <td> custom element
   },
 
