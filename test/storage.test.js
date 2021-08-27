@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 
- import storage from '../src/storage';
+import storage from '../src/storage';
 
- // selector
+// selector
 describe('lorem ipsum', () => {
   test('1. lorem', () => {
     expect(true).not.toBeNull();

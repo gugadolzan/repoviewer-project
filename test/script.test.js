@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 
- import selector from '../src/script';
+import selector from '../src/script';
 
- // selector
+// selector
 describe('lorem ipsum', () => {
   test('1. lorem', () => {
     expect(true).not.toBeNull();

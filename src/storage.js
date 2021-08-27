@@ -1,8 +1,9 @@
 // storage: object that handles reading/writing data from/to localStorage
 const storage = {
   // read: loads data from localStorage
-  read: (key) => (key && localStorage[key] ? JSON.parse(localStorage.getItem(key)) : null),
-  
+  read: (key) =>
+    key && localStorage[key] ? JSON.parse(localStorage.getItem(key)) : null,
+
   // write: saves data to localStorage
   write: (key, ...data) => {
     if (key) {
@@ -11,7 +12,10 @@ const storage = {
       } else {
         const savedData = JSON.parse(localStorage.getItem(key));
         const filteredData = data.filter((e) => !savedData.includes(e));
-        localStorage.setItem(key, JSON.stringify([...savedData, ...filteredData]));
+        localStorage.setItem(
+          key,
+          JSON.stringify([...savedData, ...filteredData])
+        );
       }
     }
   },

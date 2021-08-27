@@ -2,12 +2,15 @@
  * @jest-environment jsdom
  */
 
- import createCustomElement from '../src/createCustomElement';
+import createCustomElement from '../src/createCustomElement';
 
-// createCustomElement 
+// createCustomElement
 describe('Verificar o retorno da função CreateCustomElement no HTML', () => {
   test('1. Verifica se o atributo "a" retorna o HTML', () => {
-    const result = createCustomElement.a('http://github.com/lysprestes', 'lysprestes');
+    const result = createCustomElement.a(
+      'http://github.com/lysprestes',
+      'lysprestes'
+    );
     expect(result).not.toBeNull();
     expect(result.href).toEqual('http://github.com/lysprestes');
     expect(result.text).toEqual('lysprestes');
@@ -19,7 +22,14 @@ describe('Verificar o retorno da função CreateCustomElement no HTML', () => {
     expect(tdResult.textContent).toEqual('pally');
   });
   test('3. Verifica se o atributo "trd" (javascript) retorna o HTML', () => {
-    const params = ['pr', 'username', 'desempenho', 'criterio', 'reqob', 'reqtot'];
+    const params = [
+      'pr',
+      'username',
+      'desempenho',
+      'criterio',
+      'reqob',
+      'reqtot',
+    ];
     const trResult = createCustomElement.trd(...params);
     expect(trResult).not.toBeNull();
     expect(trResult.className).toBe('pr-line');

@@ -6,13 +6,16 @@ import data from './data.js';
 async function getReposInfo(cohort = 'sd-014-a') {
   // gets team (cohort) id
   const cohortID = data.teamsID[cohort];
-  const repos = await api.query(`/organizations/55410300/team/${cohortID}/repos`);
+  const repos = await api.query(
+    `/organizations/55410300/team/${cohortID}/repos`
+  );
 
   // gets project repos
   const projectRepos = repos.reduce((acc, repo) => {
     // checks if repo is a project repo
-    if (data.projects.some((project) => repo.name.includes(project)))
+    if (repo.name.includes('project')) {
       return [...acc, repo.pulls_url.split('tryber/')[1].split('/pulls')[0]];
+    }
     return acc;
   }, []);
 
@@ -102,12 +105,14 @@ async function getRepo(projectName) {
   div.appendChild();
   */
 
-  selector.accordionOutput.appendChild(createCustomElement.accordionItem(
-    Number(selector.accordionOutput.children.length) + 1,
-    'accordionOutput',
-    createCustomElement.span(projectName, '', projectName),
-    createCustomElement.table(header, results),
-  ));
+  selector.accordionOutput.appendChild(
+    createCustomElement.accordionItem(
+      Number(selector.accordionOutput.children.length) + 1,
+      'accordionOutput',
+      createCustomElement.span(projectName, '', projectName),
+      createCustomElement.table(header, results)
+    )
+  );
 }
 
 function addRepo() {
@@ -123,25 +128,41 @@ function addRepo() {
   // }
 }
 
+async function getProjecReposFromCohort() {
+  // clear selector.projects_cohort options
+  selector.projects_cohort.innerHTML =
+    '<option disabled selected>ESCOLHA O PROJETO</option>';
+
+  const cohort = selector.repos_cohort.value;
+  // get the list of projects from the cohort
+  const projectRepos = await getReposInfo(cohort);
+
+  projectRepos.forEach((project) => {
+    const text = project.split('project-')[1].replace(/-/g, ' ').toUpperCase();
+    selector.projects_cohort.appendChild(
+      createCustomElement.option(project, text)
+    );
+  });
+}
+
 // element initialization on page load
 window.onload = () => {
-  // testing
-  getReposInfo('sd-012');
   // load DOM selectors
   selector.add(
     'user_button',
     'user_input',
     'user_cohort',
+    'projects_cohort',
     'repos_button',
     'repos_input',
     'repos_cohort',
     'status',
     'loading',
-    'accordionOutput',
+    'accordionOutput'
   );
   // add event listeners
-  selector.user_button.addEventListener('click', addUser);
-  selector.repos_button.addEventListener('click', addRepo);
+  // selector.user_button.addEventListener('click', addUser);
+  // selector.repos_button.addEventListener('click', addRepo);
 
   // read from localStorage and restore saved repos
   const savedRepos = storage.read('repos');
@@ -151,10 +172,20 @@ window.onload = () => {
 
   // dynamically build the cohort list
   Object.keys(data.teamsID).forEach((key) => {
-    const text = `Turma ${key.split('sd-0')[1].toUpperCase()}`;
-    selector.user_cohort.appendChild(createCustomElement.option(key, text, (key === 'sd-014-a')));
-    selector.repos_cohort.appendChild(createCustomElement.option(key, text, (key === 'sd-014-a')));
+    const text = `TURMA ${key.split('sd-0')[1].toUpperCase()}`;
+    // selector.user_cohort.appendChild(createCustomElement.option(key, text, (key === 'sd-014-a')));
+    selector.repos_cohort.appendChild(
+      // createCustomElement.option(key, text, key === 'sd-014-a')
+      createCustomElement.option(key, text)
+    );
   });
+
+  // add project list to the cohort select
+  selector.repos_cohort.addEventListener('change', () =>
+    getProjecReposFromCohort()
+  );
+
+  // selector.projects_cohort.addEventListener('change', );
 };
 
 // export objects for testing

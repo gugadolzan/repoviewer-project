@@ -6,15 +6,15 @@
 @import 'corner.css';
 
 :root {
-  --black: #22272E;
-  --white: #CDD9E5;
-  --ice: #EBF1F6;
-  --grey: #2D333B;
-  --light-grey: #282E36;
-  --dark-grey: #1C2128;
-  --blue: #539BF5;
-  --red: #E34C26;
-  --green: #4A8B50;
+  --black: #22272e;
+  --white: #cdd9e5;
+  --ice: #ebf1f6;
+  --grey: #2d333b;
+  --light-grey: #282e36;
+  --dark-grey: #1c2128;
+  --blue: #539bf5;
+  --red: #e34c26;
+  --green: #4a8b50;
 }
 
 * {
@@ -58,13 +58,15 @@ body {
 
 .in-container {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: center;
 }
 
 .custom-search {
+  height: 40px;
+  margin: 12px;
   position: relative;
-  width: 300px;
+  width: 400px;
 }
 
 .custom-search-input {
@@ -78,7 +80,8 @@ body {
   font-style: italic; /* pally */
 }
 
-.custom-search-botton , select {
+.custom-search-botton,
+select {
   position: absolute;
   background: var(--green);
   color: var(--white);
@@ -161,7 +164,8 @@ a {
 }
 
 /* tables */
-.pr-header , .pr-table {
+.pr-header,
+.pr-table {
   display: flexbox;
   margin: auto;
   align-items: center;
@@ -181,11 +185,12 @@ tr {
   background-color: var(--black);
 }
 
-tr:nth-child( even ) {
+tr:nth-child(even) {
   background-color: var(--light-grey);
 }
 
-#item1 , .accordion-item {
+#item1,
+.accordion-item {
   background-color: var(--black);
 }
 

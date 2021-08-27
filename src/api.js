@@ -1,4 +1,4 @@
-import { request } from "https://cdn.skypack.dev/@octokit/request";
+import { request } from 'https://cdn.skypack.dev/@octokit/request';
 
 // errorMsg: output a formatted error message to the screen
 const errorMsg = (msg) => alert(`[Error] ${msg}`);
