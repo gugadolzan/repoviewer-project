@@ -11,12 +11,12 @@ async function getReposInfo(cohort = 'sd-014-a') {
   // gets project repos
   const projectRepos = repos.reduce((acc, repo) => {
     // checks if repo is a project repo
-    if (data.projects.some((project) => repo.name.includes(project)))
+    if (data.projects.some((project) => repo.name.includes(project))) {
       return [...acc, repo.pulls_url.split('tryber/')[1].split('/pulls')[0]];
+    }
     return acc;
   }, []);
 
-  console.log(projectRepos);
   return projectRepos;
   // returns array of project repos query strings
 }
@@ -31,14 +31,59 @@ const selector = {
 
 // addUser(): reads the .user_input text input and adds a custom hyperlink to the user's GitHub profile
 async function addUser() {
-  const user = selector.user_input.value;
+  // const user = selector.user_input.value;
+  const user = 'Atharr';
   if (!user || user.length === 0) {
     return;
   }
+  const cohort = selector.user_cohort.value;
+  if (!cohort || cohort.length === 0) {
+    return;
+  }
+  // call the API to get the user details
   const JSON = await api.query(`/users/${user}`);
-  selector.output.appendChild(
-    createCustomElement.a(JSON.html_url, `${JSON.login} (${JSON.name})`)
-  );
+  const userName = createCustomElement.a(JSON.html_url, `${JSON.login} (${JSON.name})`);
+  // call the API to get the project grades
+  const projects = await Promise.resolve(getReposInfo(cohort));
+  // const results = await Promise.resolve(values); // call Promises.all to fullfill all promises
+  // results.sort((a, b) => a. - Number(b[0])); // sort the results
+  const results = await Promise.all(projects.map(async (projectName) => {
+    /* const baseQuery = `/repos/{org}/${projectName}`; // create base query from project name
+    const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
+  
+    const values = pullRequestsJSON.map(async (element) => {
+      // for each PR...
+      const { number, user } = element; // get the PR number and user info
+      const comments = await api.query(
+        `${baseQuery}/issues/${number}/comments?per_page=100`
+      ); // call the API to get the comments
+      const comment = comments
+        .reverse()
+        .find((c) => c.body.includes('Resultado do projeto')).body; // look for the 'grades' comment
+      return [
+        number,
+        createCustomElement.a(user.html_url, user.login),
+        ...getProjectStatus(comment),
+      ]; // parse the info from the comment and return thre results
+    }); */
+      return [projectName, '1', 'Suficiente', 'Padrão', '100.00%', '100.00%'];
+  }));
+  // define a header...
+  const header = [
+    'Projeto',
+    'Núm.<br>PR',
+    'Desempenho',
+    'Critério de<br>Avaliação',
+    'Req.<br>Obrigatórios',
+    'Req.<br>Totais',
+  ];
+  // create table in the accordionOutput section
+  selector.accordionOutput.appendChild(createCustomElement.accordionItem(
+    Number(selector.accordionOutput.children.length) + 1,
+    'accordionOutput',
+    userName,
+    createCustomElement.table(header, results),
+  ));
 }
 
 // getProjectStatus: parses a comment string and returns status, criteria, mandatoryReqs, totalReqs
@@ -60,7 +105,7 @@ function getProjectStatus(comment) {
 
 // getRepo: reads user input and prints a table with grade information from a repo
 async function getRepo(projectName) {
-  selector.loading.textContent = `loading ${projectName}...`;
+  selector.status.appendChild(createCustomElement.p(`Loading ${projectName}...`));
 
   const baseQuery = `/repos/{org}/${projectName}`; // create base query from cohort and project
   const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
@@ -83,8 +128,8 @@ async function getRepo(projectName) {
   const results = await Promise.all(values); // call Promises.all to fullfill all promises
   results.sort((a, b) => Number(a[0]) - Number(b[0])); // sort the results
 
+  // define a header...
   const header = [
-    // define a header...
     'Núm.',
     'Usuário',
     'Desempenho',
@@ -93,7 +138,7 @@ async function getRepo(projectName) {
     'Req.<br>Totais',
   ];
 
-  selector.loading.textContent = 'idle.'; // set the idle message in the status line
+  selector.status.appendChild(createCustomElement.p(`Loaded ${projectName}.`));
 
   /* const div = createCustomElement.div('titulo', '');
   const button = createCustomElement.button('', 'btn btn-default');
@@ -136,18 +181,11 @@ window.onload = () => {
     'repos_input',
     'repos_cohort',
     'status',
-    'loading',
     'accordionOutput',
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
   selector.repos_button.addEventListener('click', addRepo);
-
-  // read from localStorage and restore saved repos
-  const savedRepos = storage.read('repos');
-  if (savedRepos) {
-    savedRepos.forEach((repo) => getRepo(repo));
-  }
 
   // dynamically build the cohort list
   Object.keys(data.teamsID).forEach((key) => {
@@ -155,6 +193,13 @@ window.onload = () => {
     selector.user_cohort.appendChild(createCustomElement.option(key, text, (key === 'sd-014-a')));
     selector.repos_cohort.appendChild(createCustomElement.option(key, text, (key === 'sd-014-a')));
   });
+
+  // read from localStorage and restore saved repos
+  const savedRepos = storage.read('repos');
+  if (savedRepos) {
+    savedRepos.forEach((repo) => getRepo(repo));
+  }
+
 };
 
 // export objects for testing
