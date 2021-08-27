@@ -59,10 +59,11 @@ const createCustomElement = {
     return section; // return the assembled <div> custom element
   },
 
-  // span(text): returns a custom <span> element with provided id and text parameters
-  span: (id, text) => {
+  // span(text): returns a custom <span> element with provided id, class and text parameters
+  span: (id, className, text) => {
     const span = document.createElement('span'); // create a new <span> element
     span.id = id; // set the id name
+    span.className = className; // set the class
     span.textContent = text; // set the text content
     return span; // return the assembled <span> custom element
   },

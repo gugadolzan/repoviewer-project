@@ -73,7 +73,8 @@ function getProjectStatus(comment) {
 
 // getRepo: reads user input and prints a table with grade information from a repo
 async function getRepo(cohort, project) {
-  selector.loading.textContent = `loading ${cohort}-project-${project}...`;
+  const projectName = `${cohort}-project-${project}`;
+  selector.loading.textContent = `loading ${projectName}...`;
 
   const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
   const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
@@ -106,32 +107,34 @@ async function getRepo(cohort, project) {
     'Req.<br>Totais',
   ];
 
-  selector.loading.textContent = 'idle.';
-  const count = Number(selector.accordionOutput.children.length) + 1;
-  selector.accordionOutput.appendChild(
-    createCustomElement.accordionItem(
-      count,
-      'accordionOutput',
-      createCustomElement.span(
-        `${cohort}-project-${project}`,
-        `${cohort}-project-${project}`
-      ),
-      createCustomElement.table(header, results)
-    )
-  );
+  selector.loading.textContent = 'idle.'; // set the idle message in the status line
+
+  /* const div = createCustomElement.div('titulo', '');
+  const button = createCustomElement.button('', 'btn btn-default');
+  button.appendChild(createCustomElement.span(null, 'glyphicon glyphicon-remove', null));
+  div.appendChild(button);
+  div.appendChild();
+  */
+
+  selector.accordionOutput.appendChild(createCustomElement.accordionItem(
+    Number(selector.accordionOutput.children.length) + 1,
+    'accordionOutput',
+    createCustomElement.span(projectName, '', projectName),
+    createCustomElement.table(header, results),
+  ));
 }
 
 function addRepo() {
-  // const cohort = selector.repos_cohort.value; // get cohort name from the the #cohort select
+  const cohort = selector.repos_cohort.value; // get cohort name from the the #cohort select
   // const project = selector.repos_input.value; // get project name from the #repos_input input
-  const cohort = 'sd-014-a';
   const project = 'pixels-art';
 
   const savedRepos = storage.read('repos');
-  if (!savedRepos || !savedRepos.some({ cohort, project })) {
-    getRepo(cohort, project);
-    storage.write('repos', { cohort, project });
-  }
+  console.log(savedRepos);
+  // if (!savedRepos || !savedRepos.some({ cohort, project })) {
+  getRepo(cohort, project);
+  storage.write('repos', { cohort, project });
+  // }
 }
 
 // element initialization on page load
@@ -157,10 +160,7 @@ window.onload = () => {
   // read from localStorage and restore saved repos
   const savedRepos = storage.read('repos');
   if (savedRepos) {
-    savedRepos.forEach((repo) => {
-      getRepo(repo.cohort, repo.project);
-      console.log(repo);
-    });
+    savedRepos.forEach((repo) => getRepo(repo.cohort, repo.project));
   }
 
   createsCohorts();
