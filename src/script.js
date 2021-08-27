@@ -3,23 +3,10 @@ import createCustomElement from './createCustomElement.js';
 import storage from './storage.js';
 import data from './data.js';
 
-const createsCohorts = () => {
-  const keys = Object.keys(data.teamsID);
-  keys.forEach((key) => {
-    const cohortOption = document.createElement('option');
-    cohortOption.value = key;
-    cohortOption.textContent = 'Turma ' + key.split('sd-0')[1].toUpperCase();
-    // append to selec id cohort
-    document.getElementById('repos_cohort').appendChild(cohortOption);
-  });
-}
-
 async function getReposInfo(cohort = 'sd-014-a') {
   // gets team (cohort) id
   const cohortID = data.teamsID[cohort];
-  const repos = await api.query(
-    `/organizations/55410300/team/${cohortID}/repos`
-  );
+  const repos = await api.query(`/organizations/55410300/team/${cohortID}/repos`);
 
   // gets project repos
   const projectRepos = repos.reduce((acc, repo) => {
@@ -72,11 +59,10 @@ function getProjectStatus(comment) {
 }
 
 // getRepo: reads user input and prints a table with grade information from a repo
-async function getRepo(cohort, project) {
-  const projectName = `${cohort}-project-${project}`;
+async function getRepo(projectName) {
   selector.loading.textContent = `loading ${projectName}...`;
 
-  const baseQuery = `/repos/{org}/${cohort}-project-${project}`; // create base query from cohort and project
+  const baseQuery = `/repos/{org}/${projectName}`; // create base query from cohort and project
   const pullRequestsJSON = await api.query(`${baseQuery}/pulls?per_page=100`); // get list of PR's from the GitHub API
 
   const values = pullRequestsJSON.map(async (element) => {
@@ -125,17 +111,15 @@ async function getRepo(cohort, project) {
 }
 
 function addRepo() {
-  const cohort = selector.repos_cohort.value; // get cohort name from the the #cohort select
-  const project = selector.repos_input.value; // get project name from the #repos_input input
-  // const project = 'pixels-art';
-  if (!cohort || !project) {
+  const projectName = `${selector.repos_cohort.value}-project-${selector.repos_input.value}`; // get project name from the #repos_input input and #repos_cohort select
+  if (!projectName) {
     return;
   }
   const savedRepos = storage.read('repos');
   console.log(savedRepos);
   // if (!savedRepos || !savedRepos.some({ cohort, project })) {
-  getRepo(cohort, project);
-  storage.write('repos', { cohort, project });
+  getRepo(projectName);
+  storage.write('repos', projectName);
   // }
 }
 
@@ -153,7 +137,7 @@ window.onload = () => {
     'repos_cohort',
     'status',
     'loading',
-    'accordionOutput'
+    'accordionOutput',
   );
   // add event listeners
   selector.user_button.addEventListener('click', addUser);
@@ -162,10 +146,15 @@ window.onload = () => {
   // read from localStorage and restore saved repos
   const savedRepos = storage.read('repos');
   if (savedRepos) {
-    savedRepos.forEach((repo) => getRepo(repo.cohort, repo.project));
+    savedRepos.forEach((repo) => getRepo(repo));
   }
 
-  createsCohorts();
+  // dynamically build the cohort list
+  Object.keys(data.teamsID).forEach((key) => {
+    const text = `Turma ${key.split('sd-0')[1].toUpperCase()}`;
+    selector.user_cohort.appendChild(createCustomElement.option(key, text, (key === 'sd-014-a')));
+    selector.repos_cohort.appendChild(createCustomElement.option(key, text, (key === 'sd-014-a')));
+  });
 };
 
 // export objects for testing

@@ -51,6 +51,15 @@ const createCustomElement = {
     return h2; // return the assembled <h2 custom element
   },
 
+  // option(alue, text, selected): returns a custom <section> element with provided value, text and optional selected parameters
+  option: (value, text, selected = false) => {
+    const opt = document.createElement('option');
+    opt.value = value;
+    opt.textContent = text;
+    if (selected) opt.selected = selected;
+    return opt;
+  },
+
   // section(id, className): returns a custom <section> element with provided id and class parameters
   section: (id, className) => {
     const section = document.createElement('section'); // create a new <section> element
