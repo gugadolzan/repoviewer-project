@@ -38,7 +38,6 @@
     </a>
     <img src="imgs/rocketcolor.png" alt="rocket" class="logo">
     <h1 id="head-title">RepoViewer</h1>
-    <!-- <h1 id="head-title">RepoViewer<img src="imgs/trybe.png" alt="trybe-logo" class="logo" class="main-logo"></h1> -->
   </header>
 
   <main>
@@ -52,9 +51,9 @@
         <select name="user_cohort" class="custom-search" id="user_cohort"></select>
       </div>
 
-      <div class="in-container status" id="status">
+      <!-- <div class="in-container status" id="status">
         <p>Status: idle.</p>
-      </div>
+      </div> -->
 
       <div class="in-container">
         <img src="imgs/trybe.png" alt="trybe-logo" class="logo" class="main-logo">
@@ -70,10 +69,19 @@
     <div id="clear_btn">
       <button type="button" class="btn btn-secondary btn-lg btn-block">Limpar busca</button>
     </div>
-    <div class="in-container status" id="status">
-      <span>Status: </span><span id="loading">idle.</span>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+        Status
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu2"  id="status">
+      </ul>
     </div>
-    
+
+    <!-- <div class="in-container status" id="status">
+      <span>Status: </span><span id="loading"> idle.</span>
+    </div>-->
+
     <section class="accordion" id="accordionOutput">
     </section>
   </main>
@@ -82,7 +90,6 @@
     <span class="link"><a href="https://github.com/gugadolzan/" target="_blank">Biza</a></span>
     <span class="link"><a href="https://github.com/Atharr" target="_blank">Marcello</a></span>
     <span class="link"><a href="https://en.wikipedia.org/wiki/The_Mamas_%26_the_Papas" target="_blank">©[TheEmbaixas&TheTrybers]</a></span>
-    <!-- <span><img src="imgs/rocketwhite.png" alt="rocket" id="white-rocket" target="_blank"></span> -->
     <span class="link"><a href="https://github.com/pallyoliveira/" target="_blank">Pally</a></span>
     <span class="link"><a href="https://github.com/lysprestes/" target="_blank">Lys</a></span>
   </footer>

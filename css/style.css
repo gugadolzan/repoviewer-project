@@ -128,14 +128,19 @@ button {
   margin-bottom: 0;
 }
 
-#status {
+/* #status {
   color: var(--ice);
   font-size: 22px;
   margin: 10px auto;
   flex-direction: row;
   justify-content: flex-end;
   padding-right: 2%;
+} */
+
+li {
+  color: var(--dark-grey);
 }
+
 
 .accordion {
   padding: 10px;
