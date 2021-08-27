@@ -10,7 +10,7 @@ const createsCohorts = () => {
     cohortOption.value = key;
     cohortOption.textContent = 'Turma ' + key.split('sd-0')[1].toUpperCase();
     // append to selec id cohort
-    document.getElementById('cohort').appendChild(cohortOption);
+    document.getElementById('repos_cohort').appendChild(cohortOption);
   });
 }
 
@@ -125,10 +125,12 @@ async function getRepo(cohort, project) {
 }
 
 function addRepo() {
-  const cohort = 'sd-014-a'; // get cohort name from the the #cohort select
-  // const project = selector.repos_input.value; // get project name from the #repos_input input
-  const project = 'pixels-art';
-
+  const cohort = selector.repos_cohort.value; // get cohort name from the the #cohort select
+  const project = selector.repos_input.value; // get project name from the #repos_input input
+  // const project = 'pixels-art';
+  if (!cohort || !project) {
+    return;
+  }
   const savedRepos = storage.read('repos');
   console.log(savedRepos);
   // if (!savedRepos || !savedRepos.some({ cohort, project })) {
